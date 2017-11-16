@@ -5,6 +5,7 @@
 */*.VC.db*
 */*.VC.opendb
 */.vs
+*/.vscode
 
 ########################
 # Unreal Generated Files
