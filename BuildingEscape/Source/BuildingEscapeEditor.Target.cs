@@ -5,10 +5,13 @@ using System.Collections.Generic;
 
 public class BuildingEscapeEditorTarget : TargetRules
 {
-	public BuildingEscapeEditorTarget(TargetInfo Target) : base(Target)
-	{
-		Type = TargetType.Editor;
+    public BuildingEscapeEditorTarget(TargetInfo Target) : base(Target)
+    {
+        Type = TargetType.Editor;
 
-		ExtraModuleNames.AddRange( new string[] { "BuildingEscape" } );
-	}
+        bUseUnityBuild = false;
+        bUsePCHFiles = false;
+
+        ExtraModuleNames.AddRange(new string[] { "BuildingEscape" });
+    }
 }

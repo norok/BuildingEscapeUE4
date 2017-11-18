@@ -18,8 +18,10 @@ void UPositionReport::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FString ObjectName = GetOwner()->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Position report for %s"), *ObjectName);
+	AActor* Owner = GetOwner();
+	FString ObjectName = Owner->GetName();
+	FString ObjectPos = Owner->GetTransform().GetLocation().ToString();
+	UE_LOG(LogTemp, Warning, TEXT("%s is at %s"), *ObjectName, *ObjectPos);
 }
 
 // Called every frame
