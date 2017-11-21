@@ -1,7 +1,8 @@
 // Copyright to NB Productions. All rights reserved.
 
 #include "Grabber.h"
-#include "Gameframework/Actor.h"
+
+#define OUT // this is useful for marking OUT parameters (just for readability purposes)
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -19,7 +20,10 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AActor* Owner = GetOwner();
+	Owner = GetOwner();
+	World = GetWorld();
+	Controller = World->GetFirstPlayerController();
+
 	FString ObjectName = Owner->GetName();
 	UE_LOG(LogTemp, Warning, TEXT("%s is reporting for duty by the Grabber Class!"), *ObjectName);
 	
@@ -31,6 +35,21 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	// Get the player viewpoint
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	Controller->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation
+	);
+
+	UE_LOG(LogTemp, Warning, TEXT("Location: %s, Rotation: %s"),
+		*PlayerViewPointLocation.ToString(),
+		*PlayerViewPointRotation.ToString()
+	) // A macro doesn't need semicolons at the end
+
+	// Ray-cast out to reach distance
+
+	// See what we hit
 }
 
