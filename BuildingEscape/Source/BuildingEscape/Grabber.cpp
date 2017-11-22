@@ -36,7 +36,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// Get the player viewpoint
+	/// Get the player viewpoint
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
 	Controller->GetPlayerViewPoint(
@@ -44,15 +44,15 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		OUT PlayerViewPointRotation
 	);
 
-	UE_LOG(LogTemp, Warning, TEXT("Location: %s, Rotation: %s"),
+	/*UE_LOG(LogTemp, Warning, TEXT("Location: %s, Rotation: %s"),
 		*PlayerViewPointLocation.ToString(),
 		*PlayerViewPointRotation.ToString()
-	); // A macro doesn't need semicolons at the end
+	);*/ /// A macro doesn't need semicolons at the end
 
-	// Draw a red trace in the world to visualize
+	/// Draw a red trace in the world to visualize
 	FVector LineTraceEnd = PlayerViewPointLocation + (PlayerViewPointRotation.Vector() * Reach);
 
-	// Ray-cast out to reach distance
+	/// Debug line trace
 	DrawDebugLine(
 		World,
 		PlayerViewPointLocation,
@@ -64,6 +64,26 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		1.f
 	);
 
-	// See what we hit
+	/// Setup query parameters
+	/// This will seek for simple collision params (and ignore itself - last param)
+	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, Owner);
+
+	/// Ray-cast (line-trace) out to reach distance
+	FHitResult Hit;
+	World->LineTraceSingleByObjectType(
+		OUT Hit,
+		PlayerViewPointLocation,
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		TraceParameters
+	);
+
+	/// See what we hit
+	AActor* ActorHit = Hit.GetActor();
+
+	if (ActorHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hitting object: %s"), *ActorHit->GetName());
+	}
 }
 
