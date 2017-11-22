@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Engine/World.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Gameframework/Actor.h"
 #include "Gameframework/PlayerController.h"
 #include "Grabber.generated.h"
@@ -38,5 +39,6 @@ private:
 	float Reach = 100.f;
 
 	FColor DebugLineColor = FColor(255, 0, 0); //red
-	
+
+	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 };
