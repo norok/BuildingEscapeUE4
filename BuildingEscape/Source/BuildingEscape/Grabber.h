@@ -32,5 +32,11 @@ private:
 	UWorld* World;
 	AActor* Owner;
 	APlayerController* Controller;
+
+	// The player current reach
+	UPROPERTY(EditAnywhere)
+	float Reach = 100.f;
+
+	FColor DebugLineColor = FColor(255, 0, 0); //red
 	
 };

@@ -1,6 +1,7 @@
 // Copyright to NB Productions. All rights reserved.
 
 #include "Grabber.h"
+#include "DrawDebugHelpers.h"
 
 #define OUT // this is useful for marking OUT parameters (just for readability purposes)
 
@@ -46,9 +47,22 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	UE_LOG(LogTemp, Warning, TEXT("Location: %s, Rotation: %s"),
 		*PlayerViewPointLocation.ToString(),
 		*PlayerViewPointRotation.ToString()
-	) // A macro doesn't need semicolons at the end
+	); // A macro doesn't need semicolons at the end
+
+	// Draw a red trace in the world to visualize
+	FVector LineTraceEnd = PlayerViewPointLocation + (PlayerViewPointRotation.Vector() * Reach);
 
 	// Ray-cast out to reach distance
+	DrawDebugLine(
+		World,
+		PlayerViewPointLocation,
+		LineTraceEnd,
+		DebugLineColor,
+		false,
+		0.f,
+		0.f,
+		1.f
+	);
 
 	// See what we hit
 }
