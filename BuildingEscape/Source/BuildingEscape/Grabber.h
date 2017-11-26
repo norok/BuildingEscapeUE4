@@ -1,4 +1,4 @@
-// Copyright to NB Productions. All rights reserved.
+// Copyright to BNB Productions. All rights reserved.
 
 #pragma once
 
@@ -32,15 +32,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	// Debug
-	bool Debug = true;
-	// Reusable
-	UWorld* World;
-	AActor* Owner;
-	FString ObjectName;
-	// Controller
-	APlayerController* Controller;
-
 	// The player current reach
 	UPROPERTY(EditAnywhere)
 	float Reach = 100.f;
@@ -50,10 +41,10 @@ private:
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
 
-	// Ray-Cast and grab what's in reach
+	// Ray-Cast and grab what's in reach - Grab Event Listener
 	void Grab();
 
-	// Called when grab key is released
+	// Called when grab key is released - Release the grabbed object
 	void Release();
 
 	// Find (assumed) attached Physics
@@ -64,4 +55,13 @@ private:
 
 	// Return hit for first physic body in reach
 	const FHitResult GetFirstPhysicsBodyInReach();
+
+	struct LineTraceStartAndEnd
+	{
+		FVector LineTraceStart;
+		FVector LineTraceEnd;
+	};
+
+	// Return a struct with the necessary line trace data
+	LineTraceStartAndEnd LineTraceData();
 };
