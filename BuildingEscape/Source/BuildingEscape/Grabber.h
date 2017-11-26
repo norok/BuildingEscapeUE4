@@ -9,6 +9,7 @@
 #include "Gameframework/Actor.h"
 #include "Gameframework/PlayerController.h"
 #include "Components/InputComponent.h"
+#include "Components/PrimitiveComponent.h"
 #include "Grabber.generated.h"
 
 

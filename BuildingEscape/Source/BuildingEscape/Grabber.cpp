@@ -63,22 +63,25 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// if the physics handle is attached
-	 // move the object we're holding
+	/// Get the player viewpoint
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	Controller->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation
+	);
+
+	/// Draw a red trace in the world to visualize
+	FVector LineTraceEnd = PlayerViewPointLocation + (PlayerViewPointRotation.Vector() * Reach);
+
+	if (PhysicsHandle->GrabbedComponent)
+	{
+		// move the object we're holding
+		PhysicsHandle->SetTargetLocation(LineTraceEnd);
+	}
 
 	if (Debug)
 	{
-		/// Get the player viewpoint
-		FVector PlayerViewPointLocation;
-		FRotator PlayerViewPointRotation;
-		Controller->GetPlayerViewPoint(
-			OUT PlayerViewPointLocation,
-			OUT PlayerViewPointRotation
-		);
-
-		/// Draw a red trace in the world to visualize
-		FVector LineTraceEnd = PlayerViewPointLocation + (PlayerViewPointRotation.Vector() * Reach);
-
 		/// Debug line trace
 		DrawDebugLine(
 			World,
@@ -98,15 +101,26 @@ void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
 
-	/// See what we hit
-	GetFirstPhysicsBodyInReach();
+	FHitResult HitResult = GetFirstPhysicsBodyInReach();
+	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
+	AActor* ActorHit = HitResult.GetActor();
+
+	if (ActorHit)
+	{
+		PhysicsHandle->GrabComponentAtLocationWithRotation(
+			ComponentToGrab,
+			NAME_None,
+			ComponentToGrab->GetOwner()->GetActorLocation(),
+			ComponentToGrab->GetOwner()->GetActorRotation()
+		);
+	}
 }
 
 void UGrabber::Release()
 {
 	/// Release the grabbed object
 	UE_LOG(LogTemp, Warning, TEXT("Releasing"));
-	// TODO release physics handle
+	PhysicsHandle->ReleaseComponent();
 }
 
 const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
@@ -135,13 +149,5 @@ const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 		TraceParameters
 	);
 
-	AActor* ActorHit = Hit.GetActor();
-	
-	if (ActorHit)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Hitting object: %s"), *ActorHit->GetName());
-		// TODO attach physics handle
-	}
-
-	return FHitResult();
+	return Hit;
 }
