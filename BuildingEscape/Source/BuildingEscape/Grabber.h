@@ -31,8 +31,12 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
+	// Debug
+	bool Debug = true;
+	// Reusable
 	UWorld* World;
 	AActor* Owner;
+	FString ObjectName;
 	// Controller
 	APlayerController* Controller;
 
@@ -47,4 +51,16 @@ private:
 
 	// Ray-Cast and grab what's in reach
 	void Grab();
+
+	// Called when grab key is released
+	void Release();
+
+	// Find (assumed) attached Physics
+	void FindPhysicsComponent();
+
+	// Setup (assumed) input component
+	void SetupInputComponent();
+
+	// Return hit for first physic body in reach
+	const FHitResult GetFirstPhysicsBodyInReach();
 };
