@@ -8,6 +8,7 @@
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Gameframework/Actor.h"
 #include "Gameframework/PlayerController.h"
+#include "Components/InputComponent.h"
 #include "Grabber.generated.h"
 
 
@@ -32,6 +33,7 @@ public:
 private:
 	UWorld* World;
 	AActor* Owner;
+	// Controller
 	APlayerController* Controller;
 
 	// The player current reach
@@ -41,4 +43,8 @@ private:
 	FColor DebugLineColor = FColor(255, 0, 0); //red
 
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UInputComponent* InputComponent = nullptr;
+
+	// Ray-Cast and grab what's in reach
+	void Grab();
 };

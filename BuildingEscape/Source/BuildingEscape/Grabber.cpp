@@ -37,6 +37,21 @@ void UGrabber::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s missing PhysicsHandleComponent."), *ObjectName);
 	}
+
+	/// Look for the attached Input Component
+	InputComponent = Owner->FindComponentByClass<UInputComponent>();
+	if (InputComponent) {
+		/// Input Component is found
+		UE_LOG(LogTemp, Warning, TEXT("The input component is %s"), *InputComponent->GetName());
+
+		/// Bind input axis
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		
+		//PawnKeyEvent->GetKey();
+	}
+	else {
+		UE_LOG(LogTemp, Error, TEXT("%s missing InputComponent."), *ObjectName);
+	}
 }
 
 
@@ -53,11 +68,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		OUT PlayerViewPointRotation
 	);
 
-	/*UE_LOG(LogTemp, Warning, TEXT("Location: %s, Rotation: %s"),
-		*PlayerViewPointLocation.ToString(),
-		*PlayerViewPointRotation.ToString()
-	);*/ /// A macro doesn't need semicolons at the end
-
 	/// Draw a red trace in the world to visualize
 	FVector LineTraceEnd = PlayerViewPointLocation + (PlayerViewPointRotation.Vector() * Reach);
 
@@ -72,10 +82,26 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		0.f,
 		1.f
 	);
+}
+
+// Grab Event Listener
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
+
+	/// Get the player viewpoint
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	Controller->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation
+	);
 
 	/// Setup query parameters
 	/// This will seek for simple collision params (and ignore itself - last param)
 	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, Owner);
+
+	FVector LineTraceEnd = PlayerViewPointLocation + (PlayerViewPointRotation.Vector() * Reach);
 
 	/// Ray-cast (line-trace) out to reach distance
 	FHitResult Hit;
@@ -95,4 +121,3 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		UE_LOG(LogTemp, Warning, TEXT("Hitting object: %s"), *ActorHit->GetName());
 	}
 }
-
