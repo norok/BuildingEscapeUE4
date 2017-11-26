@@ -58,10 +58,9 @@ float UOpenDoorWithTwoPlates::GetTotalMassOfActorsOnPlate3()
 	PressurePlate3->GetOverlappingActors(OUT OverlappingActors);
 
 	// iterate through them adding their masses
-	for (AActor* Actor : OverlappingActors)
+	for (const auto* Actor : OverlappingActors)
 	{
-		UPrimitiveComponent* Component = Cast<UPrimitiveComponent>(Actor->GetRootComponent());
-		TotalMass += Component->GetMass();
+		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
 	}
 
 	return TotalMass;
