@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Engine/TriggerVolume.h"
+#include "Components/PrimitiveComponent.h"
 #include "OpenDoorWithTwoPlates.generated.h"
 
 
@@ -24,6 +26,33 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	AActor* Owner;
+
+	void OpenDoor();
+	void CloseDoor();
+	float GetTotalMassOfActorsOnPlate3();
+
+	UPROPERTY(EditAnywhere)
+	float OpenAngle = 90.f;
+
+	UPROPERTY(EditAnywhere)
+	ATriggerVolume* PressurePlate;
+
+	UPROPERTY(EditAnywhere)
+	AActor* PressurePlateOpener;
+
+	UPROPERTY(EditAnywhere)
+	ATriggerVolume* PressurePlate2;
+
+	UPROPERTY(EditAnywhere)
+	AActor* PressurePlate2Opener;
+
+	UPROPERTY(EditAnywhere)
+	ATriggerVolume* PressurePlate3;
+
+	UPROPERTY(EditAnywhere)
+	float MinimumMassNeededToOpenDoor = 25.f;
+
+	float LastDoorOpenTime;
 	
 };
