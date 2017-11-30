@@ -10,8 +10,6 @@ UOpenDoorWithTwoPlates::UOpenDoorWithTwoPlates()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 // Called when the game starts
@@ -41,20 +39,30 @@ void UOpenDoorWithTwoPlates::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UOpenDoorWithTwoPlates::OpenDoor()
 {
-	Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
+	if (Owner)
+	{
+		Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
+	}
 }
 
 void UOpenDoorWithTwoPlates::CloseDoor()
 {
-	Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f));
+	if (Owner)
+	{
+		Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f));
+	}
 }
 
 float UOpenDoorWithTwoPlates::GetTotalMassOfActorsOnPlate3()
 {
 	float TotalMass = 0.f;
 
+	// this will only work if there is a PressurePlate3
+	if (PressurePlate3 == nullptr) TotalMass;
+
 	// find all overlapping actors
 	TArray<AActor*> OverlappingActors;
+
 	PressurePlate3->GetOverlappingActors(OUT OverlappingActors);
 
 	// iterate through them adding their masses

@@ -48,6 +48,8 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (!PhysicsHandle) { return; }
+
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		// move the object we're holding
@@ -57,6 +59,8 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 void UGrabber::Grab()
 {
+	if (!PhysicsHandle) { return; }
+
 	// Line trace and see if we reach any actors with physics body collision channel set
 	FHitResult HitResult = GetFirstPhysicsBodyInReach();
 	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent(); // gets the mesh component in our case
@@ -75,6 +79,7 @@ void UGrabber::Grab()
 
 void UGrabber::Release()
 {
+	if (!PhysicsHandle) { return; }
 	PhysicsHandle->ReleaseComponent();
 }
 

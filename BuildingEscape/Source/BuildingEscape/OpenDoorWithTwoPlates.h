@@ -26,7 +26,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	AActor* Owner;
+	AActor* Owner = nullptr; /// we assume there will always be an Owner but it is good practice to initialize it anyway
 
 	void OpenDoor();
 	void CloseDoor();
@@ -36,23 +36,23 @@ public:
 	float OpenAngle = 90.f;
 
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+	ATriggerVolume* PressurePlate = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	AActor* PressurePlateOpener;
+	AActor* PressurePlateOpener = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate2;
+	ATriggerVolume* PressurePlate2 = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	AActor* PressurePlate2Opener;
+	AActor* PressurePlate2Opener = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate3;
+	ATriggerVolume* PressurePlate3 = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	float MinimumMassNeededToOpenDoor = 25.f;
 
-	float LastDoorOpenTime;
+	float LastDoorOpenTime = 0.f;
 	
 };
