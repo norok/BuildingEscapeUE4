@@ -25,26 +25,57 @@ void UOpenDoorWithTwoPlates::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	// One plate only
+	if (PressurePlate && PressurePlateOpener &&
+		!(PressurePlate2 && PressurePlate2Opener) &&
+		!(PressurePlate3)) {
+		if (PressurePlate->IsOverlappingActor(PressurePlateOpener)) {
+			OnOpen.Broadcast();
+		}
+		else
+		{
+			OnClose.Broadcast();
+		}
+	}
+
+	// Two plates
+	if (PressurePlate && PressurePlateOpener &&
+		PressurePlate2 && PressurePlate2Opener &&
+		!(PressurePlate3)) {
+		if (PressurePlate->IsOverlappingActor(PressurePlateOpener) && 
+			PressurePlate2->IsOverlappingActor(PressurePlate2Opener)) {
+			OnOpen.Broadcast();
+		}
+		else
+		{
+			OnClose.Broadcast();
+		}
+	}
+
+	// Three plates
 	if (PressurePlate && PressurePlateOpener && PressurePlate->IsOverlappingActor(PressurePlateOpener) &&
 		PressurePlate2 && PressurePlate2Opener && PressurePlate2->IsOverlappingActor(PressurePlate2Opener) &&
 		PressurePlate3 && GetTotalMassOfActorsOnPlate3() > MinimumMassNeededToOpenDoor)
 	{
-		OpenDoor();
+		OnOpen.Broadcast();
 	}
 	else
 	{
-		CloseDoor();
+		OnClose.Broadcast();
 	}
-}
 
-void UOpenDoorWithTwoPlates::OpenDoor()
-{
-	OnOpenRequest.Broadcast();
-}
-
-void UOpenDoorWithTwoPlates::CloseDoor()
-{
-	OnCloseRequest.Broadcast();
+	// Third plate only
+	if (!(PressurePlate && PressurePlateOpener) &&
+		!(PressurePlate2 && PressurePlate2Opener) &&
+		PressurePlate3) {
+		if (GetTotalMassOfActorsOnPlate3() > MinimumMassNeededToOpenDoor) {
+			OnOpen.Broadcast();
+		}
+		else
+		{
+			OnClose.Broadcast();
+		}
+	}
 }
 
 float UOpenDoorWithTwoPlates::GetTotalMassOfActorsOnPlate3()
@@ -52,7 +83,7 @@ float UOpenDoorWithTwoPlates::GetTotalMassOfActorsOnPlate3()
 	float TotalMass = 0.f;
 
 	// this will only work if there is a PressurePlate3
-	if (PressurePlate3 == nullptr) TotalMass;
+	if (PressurePlate3 == nullptr) return TotalMass;
 
 	// find all overlapping actors
 	TArray<AActor*> OverlappingActors;

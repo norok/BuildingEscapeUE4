@@ -8,8 +8,7 @@
 #include "Components/PrimitiveComponent.h"
 #include "OpenDoorWithTwoPlates.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOpenRequest); /// this is actually a new class
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCloseRequest);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoorEvent); /// this is actually a new class
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDINGESCAPE_API UOpenDoorWithTwoPlates : public UActorComponent
@@ -21,10 +20,10 @@ public:
 	UOpenDoorWithTwoPlates();
 
 	UPROPERTY(BlueprintAssignable)
-	FOnOpenRequest OnOpenRequest;
+	FDoorEvent OnOpen;
 
 	UPROPERTY(BlueprintAssignable)
-	FOnCloseRequest OnCloseRequest;
+	FDoorEvent OnClose;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float OpenAngle = 90.f;
@@ -39,8 +38,6 @@ public:
 
 	AActor* Owner = nullptr; /// we assume there will always be an Owner but it is good practice to initialize it anyway
 
-	void OpenDoor();
-	void CloseDoor();
 	float GetTotalMassOfActorsOnPlate3();
 
 	UPROPERTY(EditAnywhere)
