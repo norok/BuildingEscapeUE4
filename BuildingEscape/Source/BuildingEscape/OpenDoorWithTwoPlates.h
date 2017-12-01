@@ -8,6 +8,8 @@
 #include "Components/PrimitiveComponent.h"
 #include "OpenDoorWithTwoPlates.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOpenRequest); /// this is actually a new class
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCloseRequest);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDINGESCAPE_API UOpenDoorWithTwoPlates : public UActorComponent
@@ -17,6 +19,15 @@ class BUILDINGESCAPE_API UOpenDoorWithTwoPlates : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UOpenDoorWithTwoPlates();
+
+	UPROPERTY(BlueprintAssignable)
+	FOnOpenRequest OnOpenRequest;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCloseRequest OnCloseRequest;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float OpenAngle = 90.f;
 
 protected:
 	// Called when the game starts
@@ -31,9 +42,6 @@ public:
 	void OpenDoor();
 	void CloseDoor();
 	float GetTotalMassOfActorsOnPlate3();
-
-	UPROPERTY(EditAnywhere)
-	float OpenAngle = 90.f;
 
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate = nullptr;
@@ -52,7 +60,5 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float MinimumMassNeededToOpenDoor = 25.f;
-
-	float LastDoorOpenTime = 0.f;
 	
 };

@@ -39,18 +39,12 @@ void UOpenDoorWithTwoPlates::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UOpenDoorWithTwoPlates::OpenDoor()
 {
-	if (Owner)
-	{
-		Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
-	}
+	OnOpenRequest.Broadcast();
 }
 
 void UOpenDoorWithTwoPlates::CloseDoor()
 {
-	if (Owner)
-	{
-		Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f));
-	}
+	OnCloseRequest.Broadcast();
 }
 
 float UOpenDoorWithTwoPlates::GetTotalMassOfActorsOnPlate3()
